@@ -3,9 +3,9 @@
       unarchive:
         src: "{{ payload.artifact_name }}"
         remote_src: "{{ common.remote_src }}"
-        dest: "{{ amq.install_dir }}"
+        dest: "{{ common.install_dir }}"
         owner: "{{ amq.username }}"
         group: "{{ amq.group }}"
-        mode: "{{ amq.install_dir_mode }}"
+        mode: "{{ common.install_dir_mode }}"
   tags:
     - amq::decompress
