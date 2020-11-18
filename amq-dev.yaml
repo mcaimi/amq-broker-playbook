@@ -1,0 +1,16 @@
+# AMQ BROKER INSTALLATION PLAYBOOK
+
+- hosts: broker-dev
+  remote_user: root
+  become: no
+  any_errors_fatal: true
+
+  pre_tasks:
+    - include_vars:
+        file: "common"
+    - include_vars:
+        file: "broker-dev"
+    - include_vars:
+        file: "customerportal"
+  roles:
+    - amq-broker

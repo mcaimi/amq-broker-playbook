@@ -1,0 +1,9 @@
+- block:
+    - name: Download AMQ Broker Tarball Distribution from Customer Portal
+      rh_fetch:
+        artifact_url: "{{ common.amq_artifact_download_url }}"
+        target: "{{ payload.artifact_name }}"
+        username: "{{ customerportal.username }}"
+        password: "{{ customerportal.password }}"
+  tags:
+    - amq::download
