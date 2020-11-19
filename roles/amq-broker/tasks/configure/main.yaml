@@ -1,0 +1,6 @@
+---
+- include: create_broker.yaml
+- include: configure_broker.yaml
+- include: post_configuration.yaml
+- include: systemd_service.yaml
+- include: firewall.yaml
