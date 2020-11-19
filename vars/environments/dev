@@ -7,6 +7,9 @@ amq:
   broker_dir: "{{ common.install_dir }}/amq-broker-{{ common.amq_version }}"
   broker_name: "amq-broker-dev"
   broker_dir_mode: "u+rwx,g+rwx,o="
+  webserver_listen_address: "http://localhost:8161"
+  users_file: "artemis-users.properties"
+  roles_file: "artemis-roles.properties"
 
 parameters:
   instance_dir: "{{ amq.broker_dir }}/bin/{{ amq.broker_name }}"
@@ -19,7 +22,112 @@ admin_user:
   username: "admin"
   password: "admin"
 
-users:
-  - jboss:
-      username: "amq-user"
-      password: "password"
+amq_users:
+  - username: "amq-user"
+    password: "password"
+    role: "jboss-user"
+
+jgroups:
+  file_ping_location: "/shared/path/file.ping.dir"
+  config_file: "jgroups-file_ping.xml"
+
+ports:
+  netty: 61617
+  artemis: 61616
+  amqp: 5672
+  stomp: 61613
+  hornetq: 5445
+  mqtt: 1883
+
+broker:
+  name: 0.0.0.0
+  persistence: true
+  journal_type: ASYNCIO
+  paging_dir: "/shared/paging/dir"
+  bindings_dir: "/shared/bindings/dir"
+  journal_dir: "/shared/journal/dir"
+  large_messages_dir: "/shared/largemessages/dir"
+  journal:
+    sync: true
+    min_files: 2
+    pool_files: 10
+    block_size: 4096
+    file_size: 10M
+    buffer_timeout: 68000
+    max_io: 4096
+  acceptors:
+    - name: netty
+      address: "tcp://10.41.17.10:{{ ports.netty }}"
+    - name: artemis
+      address: "tcp://0.0.0.0:{{ ports.artemis }}?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;amqpMinLargeMessageSize=102400;protocols=CORE,AMQP,STOMP,HORNETQ,MQTT,OPENWIRE;useEpoll=true;amqpCredits=1000;amqpLowCredits=300;amqpDuplicateDetection=true"
+    - name: amqp
+      address: "tcp://0.0.0.0:{{ ports.amqp }}?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpLowCredits=300;amqpMinLargeMessageSize=102400;amqpDuplicateDetection=true"
+    - name: stomp
+      address: "tcp://0.0.0.0:{{ ports.stomp }}?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=STOMP;useEpoll=true"
+    - name: hornetq
+      address: "tcp://0.0.0.0:{{ ports.hornetq }}?anycastPrefix=jms.queue.;multicastPrefix=jms.topic.;protocols=HORNETQ,STOMP;useEpoll=true"
+    - name: mqtt
+      address: "tcp://0.0.0.0:{{ ports.mqtt }}?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT;useEpoll=true"
+  connectors:
+    - name: netty
+      address: "tcp://10.41.17.10:{{ ports.netty }}"
+  dlqs:
+    - DLQ.APPQUEUE1
+    - DLQ
+  expiry:
+    - ExpiryQueue
+    - ExpiryQueue.APPQUEUE1
+  queues:
+    - name: "APPQUEUE1"
+      dead_letter_address: DLQ.APPQUEUE1
+      expiry_address: ExpiryQueue.APPQUEUE1
+      max_byte_size: -1
+      expiry_delay: 0
+      history_day_limit: 10
+      full_policy: PAGE
+      queue_autocreate: false
+      address_autocreate: false
+      jms_queue_autocreate: false
+      jms_topic_autocreate: false
+      permissions:
+        - type: consume
+          roles: "amq,amq-user"
+        - type: browse
+          roles: "amq,amq-user"
+        - type: send
+          roles: "amq,amq-user"
+        - type: manage
+          roles: "amq"
+    - name: "#"
+      dead_letter_address: DLQ
+      expiry_address: ExpiryQueue
+      max_byte_size: -1
+      expiry_delay: 0
+      history_day_limit: 10
+      full_policy: PAGE
+      queue_autocreate: false
+      address_autocreate: false
+      jms_queue_autocreate: false
+      jms_topic_autocreate: false
+      permissions:
+        - type: createNonDurableQueue
+          roles: "amq"
+        - type: deleteNonDurableQueue
+          roles: "amq"
+        - type: createDurableQueue
+          roles: "amq"
+        - type: deleteDurableQueue
+          roles: "amq"
+        - type: createAddress
+          roles: "amq"
+        - type: deleteAddress
+          roles: "amq"
+        - type: consume
+          roles: "amq"
+        - type: browse
+          roles: "amq"
+        - type: send
+          roles: "amq"
+        - type: manage
+          roles: "amq"
+
