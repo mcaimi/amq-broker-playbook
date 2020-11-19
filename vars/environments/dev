@@ -8,3 +8,18 @@ amq:
   broker_name: "amq-broker-dev"
   broker_dir_mode: "u+rwx,g+rwx,o="
 
+parameters:
+  instance_dir: "{{ amq.broker_dir }}/bin/{{ amq.broker_name }}"
+  instance_etc_dir: "{{ amq.broker_dir }}/bin/{{ amq.broker_name }}/etc"
+  data_dir: "{{ amq.broker_dir }}/bin/{{ amq.broker_name }}/data"
+  oome_dump: "{{ amq.broker_dir }}/bin/{{ amq.broker_name }}/log/oom_dump.hprof"
+  java_opts: " -XX:+PrintClassHistogram -XX:+UseG1GC -Xms512M -Xmx2G -Dhawtio.realm=activemq  -Dhawtio.offline=true -Dhawtio.role=amq -Dhawtio.rolePrincipalClasses=org.apache.activemq.artemis.spi.core.security.jaas.RolePrincipal -Djolokia.policyLocation=${ARTEMIS_INSTANCE_ETC_URI}jolokia-access.xml -Djon.id=amq"
+
+admin_user:
+  username: "admin"
+  password: "admin"
+
+users:
+  - jboss:
+      username: "amq-user"
+      password: "password"

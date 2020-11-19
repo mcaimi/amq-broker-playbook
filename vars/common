@@ -10,3 +10,4 @@ payload:
 
 required_packages:
   - unzip
+  - java-1.8.0-openjdk
