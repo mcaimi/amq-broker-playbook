@@ -7,3 +7,6 @@ common:
 
 payload:
   artifact_name: "/tmp/amq-broker-{{ common.amq_version }}.zip"
+
+required_packages:
+  - unzip

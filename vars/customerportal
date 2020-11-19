@@ -1,3 +1,7 @@
 customerportal:
-  username: name
-  password: pwd
+  username: your_csp_username
+  password: your_csp_password
+  dependencies:
+    - python3
+  pip_dependencies:
+    - beautifulsoup4
