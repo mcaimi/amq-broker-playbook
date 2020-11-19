@@ -78,7 +78,7 @@ def rh_fetch_module():
     # module options
     module_args = dict(
             username = dict(type='str', required=True),
-            password = dict(type='str', required=True),
+            password = dict(type='str', required=True, no_log=True),
             target = dict(type='str', required=True),
             artifact_url = dict(type='str', required=True)
         )
