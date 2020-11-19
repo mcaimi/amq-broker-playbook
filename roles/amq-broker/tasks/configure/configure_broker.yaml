@@ -1,0 +1,36 @@
+- block:
+    - name: Render AMQ Broker Configuration templates
+      template:
+        src: "etc/{{ item }}.j2"
+        dest: "{{ parameters.instance_etc_dir }}/{{ item }}"
+        owner: "{{ amq.username }}"
+        group: "{{ amq.group }}"
+        backup: True
+      loop:
+        - artemis.profile
+        - bootstrap.xml
+        - broker.xml
+        - jgroups-file_ping.xml
+        - logging.properties
+        - login.config
+        - management.xml
+        - queue-security-settings.xml
+        - addresses-settings.xml
+    - name: Copy Users and Roles creation script
+      copy:
+        src: "files/add_users_roles.sh"
+        dest: "/tmp/add_users_roles.sh"
+        backup: False
+        owner: "{{ amq.username }}"
+        group: "{{ amq.group }}"
+        mode: "u+rwx,g+rw,o="
+    - name: Add Users and Roles to the Broker Instance
+      command: >
+        /tmp/add_users_roles.sh {{ parameters.instance_dir }} {{ item.username }} {{ item.password }} {{ item.role }} | grep CREATED
+      loop:
+        "{{ amq_users }}"
+      register: user_config
+      changed_when: user_config.stdout == 'CREATED'
+  tags:
+    - amq::broker_configuration_render_templates
+    - amq::broker_configuration_users_and_roles

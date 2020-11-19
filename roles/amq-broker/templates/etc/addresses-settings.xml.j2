@@ -1,0 +1,60 @@
+      <address-settings>
+      {% for address_spec in broker.queues %}
+        <address-settings match="{{ address_spec.name }}">
+          <dead-letter-address>{{ address_spec.dead_letter_address }}</dead-letter-address>
+          <expiry-address>{{ address_spec.expiry_address }}</expiry-address>
+          <redelivery-delay>{{ address_spec.expiry_delay }}</redelivery-delay>
+          <!-- with -1 only the global-max-size is in use for limiting -->
+          <max-size-bytes>{{ address_spec.max_byte_size }}</max-size-bytes>
+          <message-counter-history-day-limit>{{ address_spec.history_day_limit }}</message-counter-history-day-limit>
+          <address-full-policy>{{ address_spec.full_policy }}</address-full-policy>
+          <auto-create-queues>{{ address_spec.queue_autocreate }}</auto-create-queues>
+          <auto-create-addresses>{{ address_spec.address_autocreate }}</auto-create-addresses>
+          <auto-create-jms-queues>{{ address_spec.jms_queue_autocreate }}</auto-create-jms-queues>
+          <auto-create-jms-topics>{{ address_spec.jms_topic_autocreate }}</auto-create-jms-topics>
+         </address-setting>
+       {% endfor %}
+        <!-- if you define auto-create on certain queues, management has to be auto-create -->
+         <address-setting match="activemq.management#">
+            <dead-letter-address>DLQ</dead-letter-address>
+            <expiry-address>ExpiryQueue</expiry-address>
+            <redelivery-delay>0</redelivery-delay>
+            <!-- with -1 only the global-max-size is in use for limiting -->
+            <max-size-bytes>-1</max-size-bytes>
+            <message-counter-history-day-limit>10</message-counter-history-day-limit>
+            <address-full-policy>PAGE</address-full-policy>
+            <auto-create-queues>true</auto-create-queues>
+            <auto-create-addresses>true</auto-create-addresses>
+            <auto-create-jms-queues>true</auto-create-jms-queues>
+            <auto-create-jms-topics>true</auto-create-jms-topics>
+         </address-setting>
+       </address-settings>
+
+      <addresses>
+      {% for queue_spec in broker.queues %}
+        <address name="{{ queue_spec.name }}">
+          <anycast>
+            <queue name="{{ queue_spec.name }}">
+          </anycast>
+        </address>
+      {% endfor %}
+
+      {% for dlq_spec in broker.dlqs %}
+        <address name="{{ dlq_spec }}">
+          <anycast>
+            <queue name="{{ dlq_spec }}">
+          </anycast>
+        </address>
+      {% endfor %}
+
+      {% for expiry_spec in broker.expiry %}
+        <address name="{{ expiry_spec }}">
+          <anycast>
+            <queue name="{{ expiry_spec }}">
+          </anycast>
+        </address>
+      {% endfor %}
+
+      </addresses>
+
+

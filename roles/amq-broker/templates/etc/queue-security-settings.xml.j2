@@ -1,0 +1,11 @@
+      <security-settings>
+      {%- for queue_spec in broker.queues %}
+        <security-setting match="{{ queue_spec.name }}">
+        {% for permissions in queue_spec.permissions %}
+          <permission type="{{ permissions.type }}" roles="{{ permissions.roles }}"/>
+        {% endfor %}
+        </security-setting>
+      {% endfor %}
+     </security-settings>
+
+
