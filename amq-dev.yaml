@@ -9,8 +9,8 @@
     - include_vars:
         file: "common"
     - include_vars:
-        file: "broker-dev"
+        file: "environments/dev"
     - include_vars:
-        file: "customerportal"
+        file: "credentials/customerportal"
   roles:
     - amq-broker
