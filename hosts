@@ -1,8 +1,11 @@
 [broker-dev]
-192.168.122.240 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ansible
+dev-example-node-1 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ansible
+dev-example-node-2 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ansible
 
 [broker-preprod]
-pre.prod.host ansible_user=root
+preprod-example-node-1 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ansible
+preprod-example-node-2 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ansible
 
 [broker-prod]
-prod.host ansible_user=root
+prod-example-node-1 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ansible
+prod-example-node-2 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ansible
