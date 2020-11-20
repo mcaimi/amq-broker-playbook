@@ -1,0 +1,5 @@
+---
+- name: Start broker service
+  systemd:
+    name: amq-broker.service
+    state: restarted

@@ -1,0 +1,13 @@
+[Unit]
+Description = RedHat AMQ Broker Instance
+After = network.target
+
+[Service]
+ExecStart = {{ parameters.instance_dir }}/bin/artemis-service start
+ExecStop = {{ parameters.instance_dir }}/bin/artemis-service stop
+Type=forking
+User = {{ amq.username }}
+Group = {{ amq.group }}
+
+[Install]
+WantedBy = multi-user.target

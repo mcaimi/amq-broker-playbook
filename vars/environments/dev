@@ -10,6 +10,7 @@ amq:
   webserver_listen_address: "http://localhost:8161"
   users_file: "artemis-users.properties"
   roles_file: "artemis-roles.properties"
+  restart_service: "no"
 
 parameters:
   instance_dir: "{{ amq.broker_dir }}/bin/{{ amq.broker_name }}"
