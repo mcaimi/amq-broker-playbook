@@ -1,7 +1,7 @@
 - block:
     - name: Render AMQ Broker Configuration templates
       template:
-        src: "etc/{{ item }}.j2"
+        src: "amq-broker/{{ item }}.j2"
         dest: "{{ parameters.instance_etc_dir }}/{{ item }}"
         owner: "{{ amq.username }}"
         group: "{{ amq.group }}"
