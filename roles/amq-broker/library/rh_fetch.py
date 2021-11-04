@@ -56,11 +56,17 @@ def log_in_and_download(module, username, password, url, target):
     rh_csp_session = rh_csp_session_handler.get(url)
 
     # parse html response body
-    html_response = BeautifulSoup(rh_csp_session.text, 'html.parser')
-    sso_post_url = html_response.find_all('form')[0].get('action')
+    try:
+        html_response = BeautifulSoup(rh_csp_session.text, 'html.parser')
+        sso_post_tags = html_response.find_all('form')
 
-    # perform authentication via HTTP POST
-    rh_csp_session = rh_csp_session_handler.post(sso_post_url, data=auth_payload)
+        # find sso url
+        sso_post_url = list(filter(lambda x: x is not None, [ x.get('action') for x in sso_post_tags ])).pop(0)
+
+        # perform authentication via HTTP POST
+        rh_csp_session = rh_csp_session_handler.post(sso_post_url, data=auth_payload)
+    except Exception:
+        module.fail_json(msg="No SSO URL found in page")
 
     # check response code and download data
     if (rh_csp_session.status_code == 200) and ('html' not in rh_csp_session.headers.get('Content-Type')):
