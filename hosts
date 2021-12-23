@@ -1,11 +1,11 @@
-[broker-dev]
+[broker_dev]
 dev-example-node-1 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ansible
 dev-example-node-2 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ansible
 
-[broker-preprod]
+[broker_preprod]
 preprod-example-node-1 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ansible
 preprod-example-node-2 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ansible
 
-[broker-prod]
+[broker_prod]
 prod-example-node-1 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ansible
 prod-example-node-2 ansible_user=root ansible_ssh_private_key_file=~/.ssh/id_rsa_ansible

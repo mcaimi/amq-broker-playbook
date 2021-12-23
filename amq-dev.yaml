@@ -1,6 +1,6 @@
 # AMQ BROKER INSTALLATION PLAYBOOK
 
-- hosts: broker-dev
+- hosts: broker_dev
   remote_user: root
   become: no
   any_errors_fatal: true
