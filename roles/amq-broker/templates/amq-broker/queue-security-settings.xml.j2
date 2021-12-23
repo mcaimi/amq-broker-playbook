@@ -1,4 +1,4 @@
-      <security-settings>
+      <security-settings xmlns="urn:activemq:core">
       {%- for queue_spec in broker.queues %}
         <security-setting match="{{ queue_spec.name }}">
         {% for permissions in queue_spec.permissions %}
@@ -7,5 +7,3 @@
         </security-setting>
       {% endfor %}
      </security-settings>
-
-

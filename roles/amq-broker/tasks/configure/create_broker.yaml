@@ -1,4 +1,8 @@
 - block:
+    - name: Create directory for AMQ Instances
+      file:
+        path: "{{ amq.instance_dir }}"
+        state: directory
     - name: Copy broker creation script to remote machine
       copy:
         src: "files/make_broker.sh"
@@ -9,7 +13,7 @@
         mode: "u+rwx,g+rw,o="
     - name: Create a new broker instance
       command: >
-          /tmp/make_broker.sh {{ amq.broker_dir }} {{ amq.broker_name }} {{ admin_user.username }} {{ admin_user.password }} | grep ALREADY_EXISTS
+          /tmp/make_broker.sh {{ amq.broker_dir }} {{ amq.instance_dir }} {{ amq.broker_name }} {{ admin_user.username }} {{ admin_user.password }} | grep ALREADY_EXISTS
       register: artemis_create
       changed_when: artemis_create.stdout != 'ALREADY_EXISTS'
   tags:

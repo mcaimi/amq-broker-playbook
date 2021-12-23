@@ -1,6 +1,6 @@
-      <address-settings>
+      <address-settings xmlns="urn:activemq:core">
       {% for address_spec in broker.queues %}
-        <address-settings match="{{ address_spec.name }}">
+        <address-setting match="{{ address_spec.name }}">
           <dead-letter-address>{{ address_spec.dead_letter_address }}</dead-letter-address>
           <expiry-address>{{ address_spec.expiry_address }}</expiry-address>
           <redelivery-delay>{{ address_spec.expiry_delay }}</redelivery-delay>
@@ -29,32 +29,3 @@
             <auto-create-jms-topics>true</auto-create-jms-topics>
          </address-setting>
        </address-settings>
-
-      <addresses>
-      {% for queue_spec in broker.queues %}
-        <address name="{{ queue_spec.name }}">
-          <anycast>
-            <queue name="{{ queue_spec.name }}">
-          </anycast>
-        </address>
-      {% endfor %}
-
-      {% for dlq_spec in broker.dlqs %}
-        <address name="{{ dlq_spec }}">
-          <anycast>
-            <queue name="{{ dlq_spec }}">
-          </anycast>
-        </address>
-      {% endfor %}
-
-      {% for expiry_spec in broker.expiry %}
-        <address name="{{ expiry_spec }}">
-          <anycast>
-            <queue name="{{ expiry_spec }}">
-          </anycast>
-        </address>
-      {% endfor %}
-
-      </addresses>
-
-

@@ -1,5 +1,6 @@
 ---
-- include: create_broker.yaml
-- include: configure_broker.yaml
-- include: post_configuration.yaml
-- include: systemd_service.yaml
+- include_tasks: create_broker.yaml
+- include_tasks: configure_broker.yaml
+- include_tasks: post_configuration.yaml
+- include_tasks: systemd_service.yaml
+- include_tasks: create_users.yaml

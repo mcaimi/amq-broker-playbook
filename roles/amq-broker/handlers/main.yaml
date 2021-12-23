@@ -1,1 +1,1 @@
-- include: amq-broker.yaml
+- include_tasks: amq-broker.yaml

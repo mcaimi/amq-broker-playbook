@@ -1,0 +1,28 @@
+      <addresses xmlns="urn:activemq:core">
+      {% for queue_spec in broker.queues %}
+        <address name="{{ queue_spec.name }}">
+          <anycast>
+            <queue name="{{ queue_spec.name }}"></queue>
+          </anycast>
+        </address>
+      {% endfor %}
+
+      {% for dlq_spec in broker.dlqs %}
+        <address name="{{ dlq_spec }}">
+          <anycast>
+            <queue name="{{ dlq_spec }}"></queue>
+          </anycast>
+        </address>
+      {% endfor %}
+
+      {% for expiry_spec in broker.expiry %}
+        <address name="{{ expiry_spec }}">
+          <anycast>
+            <queue name="{{ expiry_spec }}"></queue>
+          </anycast>
+        </address>
+      {% endfor %}
+
+      </addresses>
+
+

@@ -164,7 +164,9 @@ under the License.
 
       <xi:include href="{{ parameters.instance_etc_dir }}/queue-security-settings.xml"/>
       <xi:include href="{{ parameters.instance_etc_dir }}/addresses-settings.xml"/>
+      <xi:include href="{{ parameters.instance_etc_dir }}/addresses.xml"/>
 
+      {% if cluster.enable == True %}
       <broadcast-groups>
          <broadcast-group name="mail-broadcast-group">
             <broadcast-period>5000</broadcast-period>
@@ -176,7 +178,7 @@ under the License.
 
       <discovery-groups>
          <discovery-group name="mail-discovery-group">
-            <jgroups-file>test-jgroups-file_ping.xml</jgroups-file>
+            <jgroups-file>jgroups-file_ping.xml</jgroups-file>
             <jgroups-channel>active_broadcast_channel</jgroups-channel>
             <refresh-timeout>10000</refresh-timeout>
          </discovery-group>
@@ -192,6 +194,7 @@ under the License.
             <discovery-group-ref discovery-group-name="mail-discovery-group"/>
          </cluster-connection>
       </cluster-connections>
+      {% endif %}
 
       <!-- Uncomment the following if you want to use the Standard LoggingActiveMQServerPlugin pluging to log in events
       <broker-plugins>
