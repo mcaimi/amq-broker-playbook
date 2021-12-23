@@ -12,10 +12,12 @@ Requirements:
 
 The playbook installs:
 
-* Two AMQ Brokers in a clustered configuration
+* An instance of AMQ Broker
 * Creates AMQ Users
 * Manages the creation of Queues and Topics
 * Manages Queue ACLs
+
+Clustered installations are still WIP and they need at least a shared filesystem setup, which the playbook does not cover.
 
 **This playbook is intended to install and manage only RedHat supported software coming from RedHat repositories. It should be fairly trivial however to adapt the playbook to install the upstream Artemis MQ distribution on CentOS**
 
@@ -25,9 +27,9 @@ Tarball link and software versions can be changed/updated inside `vars/common`:
 
 ```yaml
 common:
-  amq_artifact_download_url: https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=84211&product=jboss.amq.broker
+  amq_artifact_download_url: https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=103634
   remote_src: "yes"
-  amq_version: "7.7.0"
+  amq_version: "7.9.1"
 ```
 
 ## Setup Customer Portal Credentials

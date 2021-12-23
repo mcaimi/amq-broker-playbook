@@ -1,7 +1,7 @@
 common:
-  amq_artifact_download_url: https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=99191
+  amq_artifact_download_url: https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=103634
   remote_src: "yes"
-  amq_version: "7.8.2"
+  amq_version: "7.9.1"
   install_dir: "/opt/amq-broker"
   install_dir_mode: "u+rwx,g+rwx,o="
 
