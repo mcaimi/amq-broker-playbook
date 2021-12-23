@@ -1,11 +1,12 @@
 amq:
-  username: jboss
+  username: artemis
   user_comment: "AMQ Broker User"
-  user_uid: 1010
+  user_uid: 1012
   group: "amq-broker"
-  group_id: 1010
+  group_id: 1012
   broker_dir: "{{ common.install_dir }}/amq-broker-{{ common.amq_version }}"
   broker_name: "amq-broker-dev"
+  instance_dir: "/opt/amq"
   broker_dir_mode: "u+rwx,g+rwx,o="
   webserver_listen_address: "http://localhost:8161"
   users_file: "artemis-users.properties"
@@ -13,11 +14,11 @@ amq:
   restart_service: "no"
 
 parameters:
-  instance_dir: "{{ amq.broker_dir }}/bin/{{ amq.broker_name }}"
-  instance_etc_dir: "{{ amq.broker_dir }}/bin/{{ amq.broker_name }}/etc"
-  data_dir: "{{ amq.broker_dir }}/bin/{{ amq.broker_name }}/data"
-  oome_dump: "{{ amq.broker_dir }}/bin/{{ amq.broker_name }}/log/oom_dump.hprof"
-  java_opts: " -XX:+PrintClassHistogram -XX:+UseG1GC -Xms512M -Xmx2G -Dhawtio.realm=activemq  -Dhawtio.offline=true -Dhawtio.role=amq -Dhawtio.rolePrincipalClasses=org.apache.activemq.artemis.spi.core.security.jaas.RolePrincipal -Djolokia.policyLocation=${ARTEMIS_INSTANCE_ETC_URI}jolokia-access.xml -Djon.id=amq"
+  instance_dir: "{{ amq.instance_dir }}/{{ amq.broker_name }}"
+  instance_etc_dir: "{{ amq.instance_dir }}/{{ amq.broker_name }}/etc"
+  data_dir: "{{ amq.instance_dir }}/{{ amq.broker_name }}/data"
+  oome_dump: "{{ amq.instance_dir }}/{{ amq.broker_name }}/log/oom_dump.hprof"
+  java_opts: " -XX:+PrintClassHistogram -XX:+UseG1GC -Xms512M -Xmx2G -Dhawtio.realm=activemq  -Dhawtio.offline=true -Dhawtio.role=amq -Dhawtio.rolePrincipalClasses=org.apache.activemq.artemis.spi.core.security.jaas.RolePrincipal -Djolokia.policyLocation=${ARTEMIS_INSTANCE_ETC_URI}/jolokia-access.xml -Djon.id=amq"
 
 admin_user:
   username: "admin"
@@ -40,16 +41,20 @@ ports:
   hornetq: 5445
   mqtt: 1883
 
+ipv4:
+  netty: 10.0.0.158
+  listen_address_for_acceptors: 0.0.0.0
+
 broker:
   name: 0.0.0.0
-  persistence: true
+  persistence: "true"
   journal_type: ASYNCIO
-  paging_dir: "/shared/paging/dir"
-  bindings_dir: "/shared/bindings/dir"
-  journal_dir: "/shared/journal/dir"
-  large_messages_dir: "/shared/largemessages/dir"
+  paging_dir: "{{ parameters.data_dir }}"
+  bindings_dir: "{{ parameters.data_dir }}"
+  journal_dir: "{{ parameters.data_dir }}"
+  large_messages_dir: "{{ parameters.data_dir }}"
   journal:
-    sync: true
+    sync: "true"
     min_files: 2
     pool_files: 10
     block_size: 4096
@@ -58,20 +63,20 @@ broker:
     max_io: 4096
   acceptors:
     - name: netty
-      address: "tcp://10.41.17.10:{{ ports.netty }}"
+      address: "tcp://{{ ipv4.netty }}:{{ ports.netty }}"
     - name: artemis
-      address: "tcp://0.0.0.0:{{ ports.artemis }}?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;amqpMinLargeMessageSize=102400;protocols=CORE,AMQP,STOMP,HORNETQ,MQTT,OPENWIRE;useEpoll=true;amqpCredits=1000;amqpLowCredits=300;amqpDuplicateDetection=true"
+      address: "tcp://{{ ipv4.listen_address_for_acceptors }}:{{ ports.artemis }}?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;amqpMinLargeMessageSize=102400;protocols=CORE,AMQP,STOMP,HORNETQ,MQTT,OPENWIRE;useEpoll=true;amqpCredits=1000;amqpLowCredits=300;amqpDuplicateDetection=true"
     - name: amqp
-      address: "tcp://0.0.0.0:{{ ports.amqp }}?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpLowCredits=300;amqpMinLargeMessageSize=102400;amqpDuplicateDetection=true"
+      address: "tcp://{{ ipv4.listen_address_for_acceptors }}:{{ ports.amqp }}?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=AMQP;useEpoll=true;amqpCredits=1000;amqpLowCredits=300;amqpMinLargeMessageSize=102400;amqpDuplicateDetection=true"
     - name: stomp
-      address: "tcp://0.0.0.0:{{ ports.stomp }}?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=STOMP;useEpoll=true"
+      address: "tcp://{{ ipv4.listen_address_for_acceptors }}:{{ ports.stomp }}?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=STOMP;useEpoll=true"
     - name: hornetq
-      address: "tcp://0.0.0.0:{{ ports.hornetq }}?anycastPrefix=jms.queue.;multicastPrefix=jms.topic.;protocols=HORNETQ,STOMP;useEpoll=true"
+      address: "tcp://{{ ipv4.listen_address_for_acceptors }}:{{ ports.hornetq }}?anycastPrefix=jms.queue.;multicastPrefix=jms.topic.;protocols=HORNETQ,STOMP;useEpoll=true"
     - name: mqtt
-      address: "tcp://0.0.0.0:{{ ports.mqtt }}?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT;useEpoll=true"
+      address: "tcp://{{ ipv4.listen_address_for_acceptors }}:{{ ports.mqtt }}?tcpSendBufferSize=1048576;tcpReceiveBufferSize=1048576;protocols=MQTT;useEpoll=true"
   connectors:
     - name: netty
-      address: "tcp://10.41.17.10:{{ ports.netty }}"
+      address: "tcp://{{ ipv4.netty }}:{{ ports.netty }}"
   dlqs:
     - DLQ.APPQUEUE1
     - DLQ
@@ -86,10 +91,10 @@ broker:
       expiry_delay: 0
       history_day_limit: 10
       full_policy: PAGE
-      queue_autocreate: false
-      address_autocreate: false
-      jms_queue_autocreate: false
-      jms_topic_autocreate: false
+      queue_autocreate: "false"
+      address_autocreate: "false"
+      jms_queue_autocreate: "false"
+      jms_topic_autocreate: "false"
       permissions:
         - type: consume
           roles: "amq,amq-user"
@@ -106,10 +111,10 @@ broker:
       expiry_delay: 0
       history_day_limit: 10
       full_policy: PAGE
-      queue_autocreate: false
-      address_autocreate: false
-      jms_queue_autocreate: false
-      jms_topic_autocreate: false
+      queue_autocreate: "false"
+      address_autocreate: "false"
+      jms_queue_autocreate: "false"
+      jms_topic_autocreate: "false"
       permissions:
         - type: createNonDurableQueue
           roles: "amq"

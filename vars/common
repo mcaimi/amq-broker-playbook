@@ -1,7 +1,7 @@
 common:
-  amq_artifact_download_url: https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=84211&product=jboss.amq.broker
+  amq_artifact_download_url: https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=99191
   remote_src: "yes"
-  amq_version: "7.7.0"
+  amq_version: "7.8.2"
   install_dir: "/opt/amq-broker"
   install_dir_mode: "u+rwx,g+rwx,o="
 
@@ -11,3 +11,6 @@ payload:
 required_packages:
   - unzip
   - java-1.8.0-openjdk
+
+cluster:
+  enable: false
